@@ -34,14 +34,14 @@ Components
 • Motors: Linear Motor (Brake), DC Motor (Fan)
 
 5. 프로젝트 구조
-'''
+```
 ├── stroller_gps_sensor_db.py   # 메인 컨트롤러 (Multi-threading, DB, Comm)
 ├── dht_DC.ino                  # 온습도 측정 및 선풍기 제어
 ├── CDS.ino                     # 조도 데이터 전송
 ├── Linear_motor.ino            # 압력 센서 기반 브레이크 로직 (핵심)
 ├── ultrasonic.ino              # 장애물 감지 보조
 └── not_control_SERVO.aia       # MIT App Inventor 프로젝트 파일
-'''
+```
 
 7. 주요 기술적 해결 (Troubleshooting)
 1. 센서 노이즈 및 간섭 해결
