@@ -34,14 +34,16 @@ Components
 • Motors: Linear Motor (Brake), DC Motor (Fan)
 
 5. 프로젝트 구조
+'''
 ├── stroller_gps_sensor_db.py   # 메인 컨트롤러 (Multi-threading, DB, Comm)
 ├── dht_DC.ino                  # 온습도 측정 및 선풍기 제어
 ├── CDS.ino                     # 조도 데이터 전송
 ├── Linear_motor.ino            # 압력 센서 기반 브레이크 로직 (핵심)
 ├── ultrasonic.ino              # 장애물 감지 보조
 └── not_control_SERVO.aia       # MIT App Inventor 프로젝트 파일
+'''
 
-6. 주요 기술적 해결 (Troubleshooting)
+7. 주요 기술적 해결 (Troubleshooting)
 1. 센서 노이즈 및 간섭 해결
 • 문제: DC 모터 작동 시 발생하는 진동이 온습도 센서 값에 영향을 주는 현상 발생.\
 • 해결: 모터와 센서의 물리적 마운트를 분리하고, 모터를 탄성 있는 소재로 고정하여 진동 전달 차단.
@@ -49,6 +51,7 @@ Components
 2. 데이터 패킷 유실 방지 (데이터 끝점 현상)
 • 문제: 시리얼 통신 시 여러 센서 데이터가 뒤섞여 수신되는 현상.
 • 해결: 패킷 앞뒤에 시작(11)과 끝(00\n) 마커를 추가한 커스텀 프로토콜을 설계하여 데이터 무결성 확보.
+
 7. 결과 및 시연
 • 시연 영상: youtube.com/watch?v=IndQpyns9EA&source_ve_path=OTY3MTQ&embeds_referring_euri=https%3A%2F%2Fwww.notion.so%2F
 • 앱 인터페이스: * 조도/온도/습도에 따른 동적 배경색 변경 로직 적용
