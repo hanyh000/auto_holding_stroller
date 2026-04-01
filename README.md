@@ -43,7 +43,7 @@ Components
 └── not_control_SERVO.aia       # MIT App Inventor 프로젝트 파일
 ```
 
-7. 주요 기술적 해결 (Troubleshooting)
+6. 주요 기술적 해결 (Troubleshooting)
 1. 센서 노이즈 및 간섭 해결
 • 문제: DC 모터 작동 시 발생하는 진동이 온습도 센서 값에 영향을 주는 현상 발생.\
 • 해결: 모터와 센서의 물리적 마운트를 분리하고, 모터를 탄성 있는 소재로 고정하여 진동 전달 차단.
