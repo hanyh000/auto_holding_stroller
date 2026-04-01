@@ -1,4 +1,4 @@
-# 오토홀딩 스마트 유모차 (Auto-Holding Smart Stroller)
+# 🍼 오토홀딩 스마트 유모차 (Auto-Holding Smart Stroller)
 
 > **"보호자의 손이 떨어지면 스스로 멈추는 지능형 안전 유모차"**
 > 압력 센서를 통한 자동 브레이크와 온습도·GPS 기반의 통합 모니터링 시스템
@@ -9,62 +9,57 @@
 
 ---
 
-## 1. 프로젝트 개요
-* **배경**: 최근 5년간 유모차 사고 중 66.2%가 추락 사고이며, 이는 보호자의 부주의나 경사로 밀림에서 시작됩니다.
+## 📌 1. 프로젝트 개요
+* **배경**: 최근 5년간 유모차 사고 중 66.2%가 추락 사고이며, 이는 보호자의 부주의나 경사로 밀림에서 시작됩니다. (출처: 한국소비자원 CISS, 2024)
 * **목적**: 보호자의 손 이탈을 실시간 감지하여 즉각적인 자동 브레이크를 작동시키고, 앱을 통해 주변 환경 정보를 제공하여 사고를 예방합니다.
 * **기간**: 2024.04 ~ 2024.11 (8개월, 한이음 ICT멘토링)
 * **역할**: 하드웨어 회로 설계, 펌웨어(Arduino/RPi) 구현, 블루투스 연동 앱 제작
+* **기여도**: 하드웨어 설계 65% / 코딩 70% / 앱 제작 100%
 
 ---
 
-## 2. 핵심 기능
+## ✨ 2. 핵심 기능
 
 | 기능 | 상세 설명 |
 | :--- | :--- |
-| **자동 브레이크** | Flex 압력 센서로 손 이탈 감지 시 리니어 모터가 즉시 바퀴 고정 |
-| **환경 모니터링** | 온습도·조도 센서 데이터를 앱으로 전송, 임계값 초과 시 앱 배경색 변경 경고 |
-| **스마트 팬 제어** | 온도 24°C 초과 시 자동 작동 및 앱을 통한 수동 제어 모드 지원 |
-| **실시간 위치 추적** | GPS 데이터를 파싱하여 앱 내 구글맵 링크로 유모차 현재 위치 확인 |
-| **데이터 로깅** | 모든 센서 이력을 라즈베리파이 내 SQLite DB에 저장하여 관리 |
+| **🛑 자동 브레이크** | Flex 압력 센서로 손 이탈 감지 시 리니어 모터가 즉시 바퀴 고정 |
+| **🌡️ 환경 모니터링** | 온습도·조도 센서 데이터를 앱으로 전송, 임계값 초과 시 앱 배경색 변경 경고 |
+| **🌀 스마트 팬 제어** | 온도 24°C 초과 시 자동 작동 및 앱을 통한 수동 제어 모드 지원 |
+| **📍 실시간 위치 추적** | GPS 데이터를 파싱하여 앱 내 구글맵 링크로 유모차 현재 위치 확인 |
+| **💾 데이터 로깅** | 모든 센서 이력을 라즈베리파이 내 SQLite DB에 1초 간격으로 저장 및 관리 |
 
 ---
 
-## 3. 시스템 아키텍처
+## 🏗️ 3. 시스템 아키텍처
 
-### **Hardware Connection**
-* **Master**: Raspberry Pi 4 (Data Hub & DB)
-* **Slaves**: Arduino Uno (x4) - 각 센서 및 액추에이터 제어
-* **Interface**: Serial (USB-UART), Bluetooth 2.0 (HC-06)
+[Arduino ×4] 
+  ├── 온/습도 센서 (dht_DC.ino)   → tem,xx.x / hum,xx.x
+  ├── 조도 센서   (CDS.ino)       → lig,xxx
+  ├── 압력 센서   (Linear_motor)  → 손 이탈 감지 시 리니어 모터 작동
+  └── 초음파 센서 (ultrasonic)    → 거리 측정
+          ↓ (Serial USB)
+[Raspberry Pi 4] (Master Hub)
+  ├── 멀티스레드 기반 각 Arduino 시리얼 데이터 파싱
+  ├── GPS NMEA 데이터 파싱 (pynmea2)
+  ├── SQLite3 DB 데이터 로깅 (sensor_data.db)
+  └── Bluetooth 모듈 → 앱으로 데이터 패킷 전송 ("11,온도,습도,위도,경도,조도,00\n")
+          ↓ (Bluetooth)
+[Android App (MIT App Inventor)]
+  ├── 실시간 데이터 시각화 (임계값에 따른 동적 배경색 변경)
+  └── GPS 좌표 연동 구글맵 링크 생성
 
 ---
 
-## 4. 기술 스택 및 부품
+## 🛠️ 4. 기술 스택 및 부품
 
-### **Tech Stack**
 * **Languages**: `Python` (RPi Main), `C++` (Arduino Sketch)
 * **Database**: `SQLite3`
 * **App**: `MIT App Inventor`
-* **Communication**: `Serial (USB)`, `UART (GPS)`, `Bluetooth`
-
-### **Components**
-* **Controller**: Raspberry Pi 4, Arduino Board (x4)
-* **Sensors**: Flex (Pressure), DHT11 (Temp/Humid), CDS (Light), GPS Module, Ultrasonic
-* **Motors**: Linear Motor (Brake), DC Motor (Fan)
+* **Hardware**: Raspberry Pi 4, Arduino (x4), Linear Motor, DC Motor, GPS Module, Flex Sensor, DHT11, CDS, Ultrasonic
 
 ---
 
-## 5. 프로젝트 구조
-
-    ├── stroller_gps_sensor_db.py   # 메인 컨트롤러 (Multi-threading, DB, Comm)
-    ├── dht_DC.ino                  # 온습도 측정 및 선풍기 제어
-    ├── CDS.ino                     # 조도 데이터 전송
-    ├── Linear_motor.ino            # 압력 센서 기반 브레이크 로직 (핵심)
-    ├── ultrasonic.ino              # 장애물 감지 보조
-    └── not_control_SERVO.aia       # MIT App Inventor 프로젝트 파일
-
----
-
-## 6. 주요 기술적 해결 (Troubleshooting)
+## 🔧 5. 주요 기술적 해결 (Troubleshooting)
 
 ### **a. 센서 노이즈 및 간섭 해결**
 * **문제**: DC 모터 작동 시 발생하는 진동이 온습도 센서(DHT11) 값에 영향을 주어 데이터가 튀는 현상 발생.
@@ -74,11 +69,16 @@
 * **문제**: 4개의 아두이노와 GPS 모듈에서 시리얼 통신이 동시에 쏟아질 때 데이터가 뒤섞이거나 패킷이 잘리는 현상 발생.
 * **해결**: 패킷 앞뒤에 시작(`11`)과 끝(`00\n`) 마커를 추가한 **커스텀 프로토콜**을 설계하여 데이터 무결성 확보.
 
+### **c. 리니어 모터 바퀴 접촉 정밀도 개선**
+* **문제**: 리니어 모터의 스트로크 위치가 정확하지 않아 바퀴 고정력이 약해지는 문제.
+* **해결**: 모터 장착부에 보조 기구물을 설계하여 위치를 조정하고, 하드웨어적 Interlock을 강화하여 고정력 확보.
+
 ---
 
-## 7. 결과 및 시연
+## 🎬 6. 결과 및 시연
 
 * **시연 영상**: [YouTube 바로가기](https://www.youtube.com/watch?v=IndQpyns9EA)
-* **앱 인터페이스**
-  * 조도/온도/습도 수치에 따른 **동적 배경색 변경** 로직 적용 (직관적 경고 시스템).
+
+* **앱 인터페이스 주요 특징**:
+  * 조도/온도/습도 수치에 따른 **동적 배경색 변경** 로직 적용 (파랑/연두/주황/빨강 등).
   * 실시간 GPS 위경도 데이터를 파싱하여 **구글맵 연동** 및 현재 위치 확인 기능.
