@@ -34,7 +34,6 @@ Components
 • Motors: Linear Motor (Brake), DC Motor (Fan)
 
 5. 프로젝트 구조
-6. 
 ├── stroller_gps_sensor_db.py   # 메인 컨트롤러 (Multi-threading, DB, Comm)
 ├── dht_DC.ino                  # 온습도 측정 및 선풍기 제어
 ├── CDS.ino                     # 조도 데이터 전송
