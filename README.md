@@ -3,6 +3,10 @@
 > **"보호자의 손이 떨어지면 스스로 멈추는 지능형 안전 유모차"**
 > 압력 센서를 통한 자동 브레이크와 온습도·GPS 기반의 통합 모니터링 시스템
 
+![Category](https://img.shields.io/badge/Project-Embedded%20|%20IoT-red)
+![Platform](https://img.shields.io/badge/Platform-Raspberry%20Pi%20|%20Arduino-blue)
+![App](https://img.shields.io/badge/App-MIT%20App%20Inventor-orange)
+
 ---
 
 ## 1. 프로젝트 개요
