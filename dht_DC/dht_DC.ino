@@ -21,7 +21,7 @@ void setup() {
 }
 
 void loop() {
-  // ── 시리얼 명령 수신 (딜레이 없이 항상 체크) ──────────────
+  // 시리얼 명령 수신 (딜레이 없이 항상 체크)
   while (Serial.available() > 0) {
     char command = Serial.read();
 
@@ -49,7 +49,7 @@ void loop() {
     }
   }
 
-  // ── 1초마다 센서 읽기 + 자동모드 처리 (millis 비블로킹) ───
+  // 1초마다 센서 읽기 + 자동모드 처리 (millis 비블로킹)
   unsigned long now = millis();
   if (now - lastSensorRead >= SENSOR_INTERVAL) {
     lastSensorRead = now;

@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 import pynmea2
 
-# ── 시리얼 포트 설정 ──────────────────────────────────────────
+# 시리얼 포트 설정
 SERIAL_TEMP  = '/dev/ttyACM0'  # 온습도 아두이노
 SERIAL_CDS   = '/dev/ttyACM1'  # CDS 아두이노
 SERIAL_BT    = '/dev/ttyACM2'  # 블루투스 아두이노
@@ -15,14 +15,14 @@ SERIAL_GPS   = '/dev/ttyAMA0'  # GPS UART 직접 연결
 
 BAUD = 9600
 
-# ── DB 경로 (실행 유저 홈 자동 적용) ────────────────────────
+# ── DB 경로 (실행 유저 홈 자동 적용) 
 DB_PATH = os.path.join(os.path.expanduser('~'), 'sensor_data.db')
 
-# ── 임계값 ───────────────────────────────────────────────────
+#  임계값 
 TEMP_THRESHOLD = 24
 FLEX_THRESHOLD = 10
 
-# ── 공유 데이터 + 락 ─────────────────────────────────────────
+# 공유 데이터 + 락 
 data = {
     'temp': 0.0,
     'hum':  0.0,
@@ -45,7 +45,7 @@ data_ready = {
 ser_temp_shared = None
 ser_temp_lock   = threading.Lock()
 
-# ── DB ───────────────────────────────────────────────────────
+# DB
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -79,7 +79,7 @@ def save_to_db(temp, hum, cds, flex, lat, lon):
     except Exception as e:
         print(f"[DB 저장 오류] {e}")
 
-# ── 시리얼 연결 헬퍼 (실패시 재시도) ────────────────────────
+#  시리얼 연결 헬퍼 (실패시 재시도)
 def open_serial(port, baud=9600, retry_delay=3):
     while True:
         try:
@@ -90,7 +90,7 @@ def open_serial(port, baud=9600, retry_delay=3):
             print(f"[시리얼] {port} 연결 실패: {e} → {retry_delay}초 후 재시도")
             time.sleep(retry_delay)
 
-# ── 온습도 아두이노 스레드 ───────────────────────────────────
+# 온습도 아두이노 스레드
 def handle_temp_serial():
     global ser_temp_shared
     while True:
@@ -127,7 +127,7 @@ def handle_temp_serial():
             except:
                 pass
 
-# ── CDS 아두이노 스레드 ──────────────────────────────────────
+# CDS 아두이노 스레드
 def handle_cds_serial():
     while True:
         ser = open_serial(SERIAL_CDS)
@@ -150,7 +150,7 @@ def handle_cds_serial():
             except:
                 pass
 
-# ── 압력센서 아두이노 스레드 ─────────────────────────────────
+# 압력센서 아두이노 스레드
 def handle_flex_serial():
     while True:
         ser = open_serial(SERIAL_FLEX)
@@ -173,7 +173,7 @@ def handle_flex_serial():
             except:
                 pass
 
-# ── GPS 스레드 ───────────────────────────────────────────────
+# GPS 스레드
 def read_gps():
     while True:
         ser = open_serial(SERIAL_GPS)
@@ -197,7 +197,7 @@ def read_gps():
             except:
                 pass
 
-# ── 블루투스 아두이노 스레드 ─────────────────────────────────
+# 블루투스 아두이노 스레드
 def handle_bt_serial():
     while True:
         ser_bt = open_serial(SERIAL_BT)
@@ -253,7 +253,7 @@ def handle_bt_serial():
             except:
                 pass
 
-# ── 메인 ─────────────────────────────────────────────────────
+# 메인
 if __name__ == '__main__':
     init_db()
     print("=== 라즈베리파이 센서 허브 시작 ===")
